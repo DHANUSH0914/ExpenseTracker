@@ -1,27 +1,29 @@
 const express = require("express")
 const cron = require("node-cron")
-const dotenv=require("dotenv")
-const mongoose=require("mongoose")
+const dotenv = require("dotenv")
+const mongoose = require("mongoose");
+const expenseMail = require("./EmailService/Expense");
 
-const app=express();
+const app = express();
 
 dotenv.config();
 
-mongoose.connect(process.env.DB_CONNECTION).then(()=>{
+mongoose.connect(process.env.DB_CONNECTION).then(() => {
     console.log("DB connection is Successful");
-}).catch((err)=>{
+}).catch((err) => {
     console.log(err);
 });
 
 
-const run=()=>{
+const run = () => {
     cron.schedule('* * * * * *', () => {
-        console.log('The task is running every second');               //Schedule the Process
-      });
+        // console.log('The task is running every second');               //Schedule the Process
+        expenseMail()
+    });
 }
 run();
 
-app.listen(process.env.PORT,()=>{
+app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`)
 })
 
